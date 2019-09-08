@@ -1,0 +1,94 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'java-gradle-plugin'
+    id "org.sonarqube" version "2.7"
+    id 'com.adarshr.test-logger' version '1.6.0'
+}
+
+group 'multiple_envs'
+version '1.0-SNAPSHOT'
+
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.encoding = 'UTF-8'
+}
+
+compileTestJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+    maven {
+        url "https://plugins.gradle.org/m2/"
+    }
+}
+
+dependencies {
+    testCompile group: 'org.testng', name: 'testng', version: '6.14.3'
+    compile group: 'org.testng', name: 'testng', version: '6.14.3'
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    compile group: 'com.relevantcodes', name: 'extentreports', version: '2.41.2'
+    compile group: 'com.aventstack', name: 'extentreports', version: '3.1.5'
+
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.exclusions", "**/*Generated.java"
+        property "sonar.sourceEncoding", "UTF-8"
+    }
+}
+
+apply plugin: 'org.sonarqube'
+
+task smokeTests(type: Test) {
+    useTestNG() {
+        includeGroups 'smoke'
+    }
+}
+
+task regressionTests(type: Test) {
+    useTestNG() {
+        includeGroups 'regression'
+    }
+}
+
+
+test {
+    useTestNG() {
+        useDefaultListeners = true
+        suites 'src/test/suite.xml'
+    }
+
+    testlogger {
+        theme 'mocha'
+        showSummary false
+        slowThreshold 2000
+    }
+
+    testLogging {
+        exceptionFormat "full"
+        events "started", "skipped", "passed", "failed"
+        showStandardStreams true
+    }
+
+    afterSuite { desc, result ->
+        if (!desc.parent) {
+            println "\nTest result: ${result.resultType}"
+            println "Test summary: ${result.testCount} tests, " +
+                    "${result.successfulTestCount} succeeded, " +
+                    "${result.failedTestCount} failed, " +
+                    "${result.skippedTestCount} skipped"
+        }
+    }
+}
