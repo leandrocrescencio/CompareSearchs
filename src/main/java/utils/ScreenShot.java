@@ -1,11 +1,11 @@
-package Utils;
+package utils;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import Setup.Setup;
+import setup.Setup;
 
 public class ScreenShot {
 

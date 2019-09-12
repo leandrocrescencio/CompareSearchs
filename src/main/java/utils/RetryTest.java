@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import com.relevantcodes.extentreports.LogStatus;
 import org.slf4j.Logger;
@@ -13,11 +13,12 @@ public class RetryTest implements IRetryAnalyzer {
     private int maxRetryCount = 2;
 
     public boolean retry(ITestResult result) {
+        StringBuilder message = new StringBuilder("Retrying test ");
+
         if (retryCount < maxRetryCount) {
             result.setStatus(ITestResult.FAILURE);
-            log.error("Retrying test " + result.getName()
-                    + " with status " + getResultStatusName(result.getStatus())
-                    + " for the " + (retryCount + 1) + " time(s)");
+            message.append(result.getName()).append(" with status ").append(getResultStatusName(result.getStatus())).append(" for the ").append(retryCount + 1).append(" time(s)");
+            log.error(message.toString());
 
             extendReportsFailOperations();
             retryCount++;

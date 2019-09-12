@@ -1,8 +1,8 @@
-import PageObjects.SearchObjects;
-import Utils.Propertie;
+import objects.SearchObjects;
+import utils.Propertie;
 import org.testng.annotations.Test;
-import Setup.Setup;
-import Utils.RetryTest;
+import setup.Setup;
+import utils.RetryTest;
 
 public class SearchCompareTests extends Setup {
 

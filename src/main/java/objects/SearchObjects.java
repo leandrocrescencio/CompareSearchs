@@ -1,7 +1,7 @@
-package PageObjects;
+package objects;
 
-import PageElements.SearchElements;
-import Utils.Utils;
+import elements.SearchElements;
+import utils.Utils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -11,32 +11,40 @@ import org.slf4j.LoggerFactory;
 public class SearchObjects extends SearchElements {
 
     public static final Logger log = LoggerFactory.getLogger("test");
-    private WebDriver driver;
-    private Utils Utils;
+    private static WebDriver driver;
+
+    private static WebDriver getDriver() {
+        return driver;
+    }
+
+    private static void setDriver(WebDriver page) {
+        driver = page;
+    }
+    private static Utils utils;
 
     public SearchObjects(WebDriver driver) {
-        this.driver = driver;
+        setDriver(driver);
         PageFactory.initElements(driver, this);
-        Utils = new Utils(driver);
+        utils = new Utils(getDriver());
     }
 
     public void googleSearch(String word) {
-            Utils.waitForPageLoadComplete(driver);
-            Utils.waitElementToBeClickable(googleSearchBox);
+            utils.waitForPageLoadComplete(getDriver());
+            utils.waitElementToBeClickable(googleSearchBox);
             googleSearchBox.sendKeys(word);
             googleSearchBox.sendKeys(Keys.ENTER);
     }
 
     public void bingSearch(String word) {
-        Utils.waitForPageLoadComplete(driver);
-        Utils.waitElementToBeClickable(bingSearchBox);
+        utils.waitForPageLoadComplete(getDriver());
+        utils.waitElementToBeClickable(bingSearchBox);
         bingSearchBox.sendKeys(word);
         bingSearchBox.sendKeys(Keys.ENTER);
     }
 
     public void bingSearchMobile(String word) {
-        Utils.waitForPageLoadComplete(driver);
-        Utils.waitElementToBeClickable(bingSearchMobileBox);
+        utils.waitForPageLoadComplete(getDriver());
+        utils.waitElementToBeClickable(bingSearchMobileBox);
         bingSearchMobileBox.sendKeys(word);
         bingSearchMobileBox.sendKeys(Keys.ENTER);
     }

@@ -1,6 +1,6 @@
-package Setup;
+package setup;
 
-import Utils.Static;
+import utils.Static;
 import com.relevantcodes.extentreports.LogStatus;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Point;
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-import Utils.*;
+import utils.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -24,11 +24,19 @@ import java.util.concurrent.TimeUnit;
 public class Setup {
     public static final Logger log = LoggerFactory.getLogger("P4P");
     public static WebDriver driver;
-    public String currentWindowHandle;
 
     public static WebDriver getDriver() {
         return driver;
     }
+
+    public static void setDriver(WebDriver page) {
+        driver = page;
+    }
+    public String currentWindowHandle;
+
+
+    public static final String BROWSER = "webdriver.chrome.driver";
+    public static final String DRIVER_CAPABILITY = "chrome.binary";
 
     @BeforeSuite(alwaysRun = true)
     public void extentSetup(ITestContext context) {
@@ -36,6 +44,7 @@ public class Setup {
             Static.setTestName(context.getCurrentXmlTest().getSuite().getName());
         }
     }
+
 
     @BeforeMethod(alwaysRun = true)
     public void beforeScenario(Method method) {
@@ -64,59 +73,68 @@ public class Setup {
         for (i = 0; i < chromium.length; i++)
             if (Static.OS.contains(chromium[i])) break;
 
+        String[]  spec = {"mobile","mobileEmulation"};
+
         switch (i) {
             case 0: //Windows
-                if (test.description().contains("Mobile") || test.description().contains("mobile")) {
-                    options.setCapability(Propertie.getValue("DRIVER_CAPABILITY"), Propertie.getValue("chromeWin"));
-                    options.setExperimentalOption("mobileEmulation", mobileEmulation);
+                if (Utils.containsIgnoreCase(test.description(),spec[0])) {
+                    options.setCapability(DRIVER_CAPABILITY, Propertie.getValue("chromeWin"));
+                    options.setExperimentalOption(spec[1], mobileEmulation);
                 }
-                System.setProperty(Propertie.getValue("DRIVER"), Static.PATH_PROJECT + Propertie.getValue("driverWin"));
+                System.setProperty(BROWSER, Static.PATH_PROJECT + Propertie.getValue("driverWin"));
                 break;
             case 1: //Mac
-                if (test.description().contains("Mobile") || test.description().contains("mobile")) {
-                    options.setCapability(Propertie.getValue("DRIVER_CAPABILITY"), Propertie.getValue("chromeMac"));
-                    options.setExperimentalOption("mobileEmulation", mobileEmulation);
+                if (Utils.containsIgnoreCase(test.description(),spec[0])) {
+                    options.setCapability(DRIVER_CAPABILITY, Propertie.getValue("chromeMac"));
+                    options.setExperimentalOption(spec[1], mobileEmulation);
                 }
-                System.setProperty(Propertie.getValue("DRIVER"), Static.PATH_PROJECT + Propertie.getValue("driverMac"));
+                System.setProperty(BROWSER, Static.PATH_PROJECT + Propertie.getValue("driverMac"));
                 break;
             case 2: //Linux
-                if (test.description().contains("Mobile") || test.description().contains("mobile")) {
-                    options.setCapability(Propertie.getValue("DRIVER_CAPABILITY"), Propertie.getValue("chromeLinux"));
-                    options.setExperimentalOption("mobileEmulation", mobileEmulation);
+                if (Utils.containsIgnoreCase(test.description(),spec[0])) {
+                    options.setCapability(DRIVER_CAPABILITY, Propertie.getValue("chromeLinux"));
+                    options.setExperimentalOption(spec[1], mobileEmulation);
                 }
-                System.setProperty(Propertie.getValue("DRIVER"), Static.PATH_PROJECT + Propertie.getValue("driverLinux"));
-
+                System.setProperty(BROWSER, Static.PATH_PROJECT + Propertie.getValue("driverLinux"));
                 break;
+            default:
+                log.error("No specification for the driver");
+                break;
+
         }
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(35, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
-        if (test.description().contains("Mobile") || test.description().contains("mobile")) {
+        setDriver(new ChromeDriver(options));
+        getDriver().manage().timeouts().implicitlyWait(35, TimeUnit.SECONDS);
+        getDriver().manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+        if (Utils.containsIgnoreCase(test.description(),spec[0])) {
             manageWindowsPosition();
         } else {
-            driver.manage().window().maximize();
+            getDriver().manage().window().maximize();
         }
+
         String[] websearchs = {"Google", "Bing"};
         for (i = 0; i < websearchs.length; i++)
             if (test.description().contains(websearchs[i])) break;
 
         switch (i) {
             case 0: // GOOGLE
-                driver.get(Propertie.getValue("url1"));
+                getDriver().get(Propertie.getValue("url1"));
                 break;
             case 1: // BING
-                driver.get(Propertie.getValue("url2"));
+                getDriver().get(Propertie.getValue("url2"));
+                break;
+            default:
+                log.error("No specification for the app url");
                 break;
         }
 
-        currentWindowHandle = driver.getWindowHandle();
+        currentWindowHandle = getDriver().getWindowHandle();
 
         log.info("Starting scenario: {}", test.description());
 
         if (Static.getTestName().contains("Default") && Static.getTestName().contains("Suite")) {
             Static.setTestName(this.getClass().getSimpleName());
         }
-        Utils.waitForPageLoadComplete(driver);
+        Utils.waitForPageLoadComplete(getDriver());
 
         ExtentTestManager.startTest(method.getName(), test.description());
     }
@@ -148,7 +166,7 @@ public class Setup {
         ExtentManager.getReporter(Static.getTestName()).endTest(ExtentTestManager.getTest());
         ExtentManager.getReporter(Static.getTestName()).flush();
 
-        driver.quit();
+        getDriver().quit();
         log.info("Execution finished\n+++++++++++++++++++++++++++++++++++++");
 
     }

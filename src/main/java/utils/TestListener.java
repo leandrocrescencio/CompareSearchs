@@ -1,11 +1,11 @@
-package Utils;
+package utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import Setup.Setup;
+import setup.Setup;
 
 public class TestListener extends Setup implements ITestListener {
 
@@ -18,14 +18,12 @@ public class TestListener extends Setup implements ITestListener {
 
     @Override
     public void onStart(ITestContext iTestContext) {
-        System.out.println("I am in onStart method " + iTestContext.getName());
         log.info("I am in onStart method " + iTestContext.getName());
-        iTestContext.setAttribute("WebDriver", this.driver);
+        iTestContext.setAttribute("WebDriver", getDriver());
     }
 
     @Override
     public void onFinish(ITestContext iTestContext) {
-        System.out.println("I am in onFinish method " + iTestContext.getName());
         log.info("I am in onFinish method " + iTestContext.getName());
         //Do tier down operations for extentreports reporting!
 
@@ -36,34 +34,29 @@ public class TestListener extends Setup implements ITestListener {
 
     @Override
     public void onTestStart(ITestResult iTestResult) {
-        System.out.println("I am in onTestStart method " + getTestMethodName(iTestResult) + " start");
         log.info("I am in onTestStart method " + getTestMethodName(iTestResult) + " start");
     }
 
     @Override
     public void onTestSuccess(ITestResult iTestResult) {
-        System.out.println("I am in onTestSuccess method " + getTestMethodName(iTestResult) + " succeed");
         log.info("I am in onTestSuccess method " + getTestMethodName(iTestResult) + " succeed");
         //ExtentReports log operation for passed tests.
     }
 
     @Override
     public void onTestFailure(ITestResult iTestResult) {
-        System.out.println("I am in onTestFailure method " + getTestMethodName(iTestResult) + " failed");
         log.info("I am in onTestFailure method " + getTestMethodName(iTestResult) + " failed");
         //ExtentReports log and screenshot operations for failed tests.
     }
 
     @Override
     public void onTestSkipped(ITestResult iTestResult) {
-        System.out.println("I am in onTestSkipped method " + getTestMethodName(iTestResult) + " skipped");
         log.info("I am in onTestSkipped method " + getTestMethodName(iTestResult) + " skipped");
         //ExtentReports log operation for skipped tests.
     }
 
     @Override
     public void onTestFailedButWithinSuccessPercentage(ITestResult iTestResult) {
-        System.out.println("Test failed but it is in defined success ratio " + getTestMethodName(iTestResult));
         log.info("Test failed but it is in defined success ratio " + getTestMethodName(iTestResult));
     }
 }
