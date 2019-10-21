@@ -1,5 +1,7 @@
 package setup;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utils.Static;
 import com.relevantcodes.extentreports.LogStatus;
 import org.openqa.selenium.Dimension;
@@ -7,8 +9,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class Setup {
-    public static final Logger log = LoggerFactory.getLogger("P4P");
+    public static final Logger log = LogManager.getLogger(Setup.class);
     public static WebDriver driver;
 
     public static WebDriver getDriver() {
@@ -131,7 +131,7 @@ public class Setup {
 
         log.info("Starting scenario: {}", test.description());
 
-        if (Static.getTestName().contains("Default") && Static.getTestName().contains("Suite")) {
+        if (Static.getTestName().contains("Default") || Static.getTestName().contains("Suite")) {
             Static.setTestName(this.getClass().getSimpleName());
         }
         Utils.waitForPageLoadComplete(getDriver());

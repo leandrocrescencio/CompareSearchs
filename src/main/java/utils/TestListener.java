@@ -1,7 +1,7 @@
 package utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
@@ -10,7 +10,7 @@ import setup.Setup;
 public class TestListener extends Setup implements ITestListener {
 
 
-    public static final Logger log = LoggerFactory.getLogger("P4P");
+    private static final Logger log = LogManager.getLogger(TestListener.class);
 
     private static String getTestMethodName(ITestResult iTestResult) {
         return iTestResult.getMethod().getConstructorOrMethod().getName();

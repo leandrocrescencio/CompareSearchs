@@ -1,7 +1,7 @@
 package utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Properties;
 
 public class Propertie {
 
-    public static final Logger log = LoggerFactory.getLogger("test");
+    private static final Logger log = LogManager.getLogger(Propertie.class);
     private static Properties prop = new Properties();
     private static String path = Static.PATH_PROJECT + "/src/main/resources/test.properties";
     private Propertie() {

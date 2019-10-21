@@ -3,13 +3,10 @@ package utils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import setup.Setup;
 
 public class ScreenShot {
 
-    public static final Logger log = LoggerFactory.getLogger("P4P");
     private static String base64Encoded = "";
 
     private ScreenShot() {

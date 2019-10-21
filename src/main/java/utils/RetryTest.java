@@ -1,14 +1,14 @@
 package utils;
 
 import com.relevantcodes.extentreports.LogStatus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.testng.IRetryAnalyzer;
 import org.testng.ITestResult;
 
 public class RetryTest implements IRetryAnalyzer {
 
-    Logger log = LoggerFactory.getLogger("test");
+    private static final Logger log = LogManager.getLogger(RetryTest.class);
     private int retryCount = 0;
     private int maxRetryCount = 2;
 

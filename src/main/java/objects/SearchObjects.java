@@ -5,12 +5,12 @@ import utils.Utils;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SearchObjects extends SearchElements {
 
-    public static final Logger log = LoggerFactory.getLogger("test");
+    private static final Logger log = LogManager.getLogger(SearchObjects.class);
     private static WebDriver driver;
 
     private static WebDriver getDriver() {
